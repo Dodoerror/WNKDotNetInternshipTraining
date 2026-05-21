@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WNKDotNetInternshipTraining.AdoDotNetSample", "WNKDotNetInternshipTraining.AdoDotNetSample\WNKDotNetInternshipTraining.AdoDotNetSample.csproj", "{B68AE78F-E0A2-4FD3-B407-6148EBEC0779}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WNKDotNetInternshipTraining.DapperSample", "WNKDotNetInternshipTraining.DapperSample\WNKDotNetInternshipTraining.DapperSample.csproj", "{7A0BC3B0-8A0A-4C85-9422-27F563E9E690}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B68AE78F-E0A2-4FD3-B407-6148EBEC0779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B68AE78F-E0A2-4FD3-B407-6148EBEC0779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B68AE78F-E0A2-4FD3-B407-6148EBEC0779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B68AE78F-E0A2-4FD3-B407-6148EBEC0779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0BC3B0-8A0A-4C85-9422-27F563E9E690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0BC3B0-8A0A-4C85-9422-27F563E9E690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0BC3B0-8A0A-4C85-9422-27F563E9E690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0BC3B0-8A0A-4C85-9422-27F563E9E690}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
