@@ -76,7 +76,7 @@ public class DapperSample
         string sql = "SELECT * FROM Tbl_Student WHERE IsDelete = 0";
 
         using IDbConnection db = new SqlConnection(builder.ConnectionString);
-        db..Open();
+        db.Open();
 
         List<Student> students = db.Query<Student>(sql).ToList();
 
