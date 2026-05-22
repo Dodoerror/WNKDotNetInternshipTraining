@@ -181,7 +181,7 @@ public class AdoDotNetSample
                       ,[IsDelete] = @IsDelete
                       ,[ModifiedDateTime] = @ModifiedDateTime
                       ,[ModifiedBy] = @ModifiedBy
-                 WHERE StudentNo = @StudentNo";
+                 WHERE StudentId = @StudentId";
 
         SqlCommand command = new SqlCommand(sql, connection);
         command.Parameters.AddWithValue("@StudentNo", student.StudentNo);

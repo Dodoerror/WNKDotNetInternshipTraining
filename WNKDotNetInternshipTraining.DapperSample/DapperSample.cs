@@ -1,57 +1,142 @@
-﻿using Dapper;
-using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Dapper;
+using Microsoft.Data.SqlClient;
 
 namespace WNKDotNetInternshipTraining.DapperSample;
 
 public class DapperSample
 {
-    private readonly SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder()
+    private readonly SqlConnectionStringBuilder builder =
+        new SqlConnectionStringBuilder()
+        {
+            DataSource = ".",
+            InitialCatalog = "LLDotNeInternshiptTrainning",
+            UserID = "sa",
+            Password = "sasa@123",
+            TrustServerCertificate = true
+        };
+
+    // READ
+    public void Read()
     {
-        DataSource = ".",
-        InitialCatalog = "LLDotNeInternshiptTrainning",
-        UserID = "sa",
-        Password = "sasa@123",
-        TrustServerCertificate = true
-    };
+        string sql = @"SELECT TOP (1000)
+                       [StudentId],
+                       [StudentNo],
+                       [StudentName],
+                       [FatherName],
+                       [Address],
+                       [DateOfBirth],
+                       [IsDelete],
+                       [CreatedDateTime],
+                       [CreatedBy],
+                       [ModifiedDateTime],
+                       [ModifiedBy]
+                       FROM [LLDotNeInternshiptTrainning].[dbo].[Tbl_Student]
+                       WHERE IsDelete = 0";
+
+        using IDbConnection sqlConnection =
+            new SqlConnection(builder.ConnectionString);
+
+        sqlConnection.Open();
+
+        List<Student> lst =
+            sqlConnection.Query<Student>(sql).ToList();
+
+        foreach (Student item in lst)
+        {
+            Console.WriteLine(
+                $"StudentId: {item.StudentId}, " +
+                $"StudentNo: {item.StudentNo}, " +
+                $"StudentName: {item.StudentName}, " +
+                $"FatherName: {item.FatherName}"
+            );
+        }
+    }
+
+    // EDIT
+    public void Edit()
+    {
+        string sql = @"SELECT TOP (1000)
+                       [StudentId],
+                       [StudentNo],
+                       [StudentName],
+                       [FatherName],
+                       [Address],
+                       [DateOfBirth],
+                       [IsDelete],
+                       [CreatedDateTime],
+                       [CreatedBy],
+                       [ModifiedDateTime],
+                       [ModifiedBy]
+                       FROM [LLDotNeInternshiptTrainning].[dbo].[Tbl_Student]
+                       WHERE StudentId = @StudentId
+                       AND IsDelete = 0";
+
+        using IDbConnection sqlConnection =
+            new SqlConnection(builder.ConnectionString);
+
+        sqlConnection.Open();
+
+        Student item =
+            sqlConnection.Query<Student>(
+                sql,
+                new Student
+                {
+                    StudentId = 1
+                }
+            ).FirstOrDefault();
+
+        if (item is null)
+        {
+            Console.WriteLine("Data Not Found");
+            return;
+        }
+
+        Console.WriteLine(
+            $"StudentId: {item.StudentId}, " +
+            $"StudentNo: {item.StudentNo}, " +
+            $"StudentName: {item.StudentName}, " +
+            $"FatherName: {item.FatherName}"
+        );
+    }
 
     // CREATE
     public void Create()
     {
         string sql = @"INSERT INTO Tbl_Student
-        (
-            StudentNo,
-            StudentName,
-            FatherName,
-            Address,
-            DateOfBirth,
-            IsDelete,
-            CreatedDateTime,
-            CreatedBy,
-            ModifiedDateTime,
-            ModifiedBy
-        )
-        VALUES
-        (
-            @StudentNo,
-            @StudentName,
-            @FatherName,
-            @Address,
-            @DateOfBirth,
-            @IsDelete,
-            @CreatedDateTime,
-            @CreatedBy,
-            @ModifiedDateTime,
-            @ModifiedBy
-        )";
+                       (
+                           StudentNo,
+                           StudentName,
+                           FatherName,
+                           Address,
+                           DateOfBirth,
+                           IsDelete,
+                           CreatedDateTime,
+                           CreatedBy,
+                           ModifiedDateTime,
+                           ModifiedBy
+                       )
+                       VALUES
+                       (
+                           @StudentNo,
+                           @StudentName,
+                           @FatherName,
+                           @Address,
+                           @DateOfBirth,
+                           @IsDelete,
+                           @CreatedDateTime,
+                           @CreatedBy,
+                           @ModifiedDateTime,
+                           @ModifiedBy
+                       )";
 
         Student student = new Student()
         {
-            StudentNo = "S-007",
-            StudentName = "Mg Mg",
+            StudentNo = "S-001",
+            StudentName = "Wint",
             FatherName = "U Ba",
             Address = "Yangon",
             DateOfBirth = new DateTime(2004, 10, 4),
@@ -62,62 +147,92 @@ public class DapperSample
             ModifiedBy = "1"
         };
 
-        using IDbConnection db = new SqlConnection(builder.ConnectionString);
-        db.Open();
+        using IDbConnection sqlConnection =
+            new SqlConnection(builder.ConnectionString);
 
-        db.Execute(sql, student);
+        sqlConnection.Open();
 
-        Console.WriteLine("Create Successful");
-    }
+        int result =
+            sqlConnection.Execute(sql, student);
 
-    // READ
-    public void Read()
-    {
-        string sql = "SELECT * FROM Tbl_Student WHERE IsDelete = 0";
-
-        using IDbConnection db = new SqlConnection(builder.ConnectionString);
-        db.Open();
-
-        List<Student> students = db.Query<Student>(sql).ToList();
-
-        foreach (Student item in students)
-        {
-            Console.WriteLine($"{item.StudentId} - {item.StudentName}");
-        }
+        Console.WriteLine(
+            result > 0
+            ? "Saving Successful"
+            : "Saving Failed"
+        );
     }
 
     // UPDATE
     public void Update()
     {
         string sql = @"UPDATE Tbl_Student
-                       SET StudentName = @StudentName
-                       WHERE StudentId = @StudentId";
+                       SET
+                           StudentNo = @StudentNo,
+                           StudentName = @StudentName,
+                           FatherName = @FatherName,
+                           Address = @Address,
+                           DateOfBirth = @DateOfBirth,
+                           ModifiedDateTime = @ModifiedDateTime,
+                           ModifiedBy = @ModifiedBy
+                       WHERE StudentId = @StudentId
+                       AND IsDelete = 0";
 
         Student student = new Student()
         {
             StudentId = 1,
-            StudentName = "Updated Mg Mg"
+            StudentNo = "S-001",
+            StudentName = "Updated Wint",
+            FatherName = "U Tun",
+            Address = "Mandalay",
+            DateOfBirth = new DateTime(2004, 10, 4),
+            ModifiedDateTime = DateTime.Now,
+            ModifiedBy = "1"
         };
 
-        using IDbConnection db = new SqlConnection(builder.ConnectionString);
-        db.Open();
+        using IDbConnection sqlConnection =
+            new SqlConnection(builder.ConnectionString);
 
-        db.Execute(sql, student);
+        sqlConnection.Open();
 
-        Console.WriteLine("Update Successful");
+        int result =
+            sqlConnection.Execute(sql, student);
+
+        Console.WriteLine(
+            result > 0
+            ? "Updating Successful"
+            : "Updating Failed"
+        );
     }
 
     // DELETE
     public void Delete()
     {
-        string sql = @"DELETE FROM Tbl_Student
+        string sql = @"UPDATE Tbl_Student
+                       SET
+                           IsDelete = 1,
+                           ModifiedDateTime = @ModifiedDateTime,
+                           ModifiedBy = @ModifiedBy
                        WHERE StudentId = @StudentId";
 
-        using IDbConnection db = new SqlConnection(builder.ConnectionString);
-        db.Open();
+        var student = new
+        {
+            StudentId = 1,
+            ModifiedDateTime = DateTime.Now,
+            ModifiedBy = "1"
+        };
 
-        db.Execute(sql, new { StudentId = 1 });
+        using IDbConnection sqlConnection =
+            new SqlConnection(builder.ConnectionString);
 
-        Console.WriteLine("Delete Successful");
+        sqlConnection.Open();
+
+        int result =
+            sqlConnection.Execute(sql, student);
+
+        Console.WriteLine(
+            result > 0
+            ? "Deleting Successful"
+            : "Deleting Failed"
+        );
     }
 }
